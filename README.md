@@ -34,3 +34,32 @@
 - Repository -- data access layer
 - Middleware -- request processing pipeline
 - schema -- pydantic models for validation
+
+# database
+## relational database
+- mysql
+- postgresql
+- sqlite
+- sql server
+
+
+## non-relational database
+- mongodb
+- cassandra
+- redis
+- dynamodb
+
+# constraints in database
+- primary key -- eg: student_id
+- foreign key -- eg: department_id in student table
+- unique --eg: email, phonenumber
+- not null --eg: name
+- check -- eg: salary > 0
+- default -- eg: timestamp: func.now()
+
+# mysql example
+CREATE TABLE Students(
+  Student_ID int PRIMARY KEY, 
+  LastName varchar(255) NOT NULL,
+  FirstName varchar(255)
+);
