@@ -18,3 +18,9 @@ def read_about():
 @app.get("/contact")
 def read_contact():
     return {"contact": "This is contact page"}
+#  Albattrosdip
+# steps---> 
+#  1.postgres drivers
+# 2.servers
+# 3. registration -> enterprise db->first two options
+# student_db>database>schemas>tables>right click>query tool
