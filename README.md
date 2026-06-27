@@ -63,3 +63,24 @@ CREATE TABLE Students(
   LastName varchar(255) NOT NULL,
   FirstName varchar(255)
 );
+
+# modules
+- sqlalchemy -- orm (object relational mapping)
+- fastapi -- web framework
+- uvicorn -- server for running fastapi application --> `uvicorn app.main:app --reload`
+- psycopg2 -- postgresql driver
+- pydantic -- data validation
+- typing-extensions -- type hints
+
+# Concepts:
+- ORM
+    - Object Relational Mapping --> to convert python code to sql commands without writing sql commands
+- Depends
+    - Dependency injection --> to inject dependencies into route handlers
+- Sessionmaker
+    - To create a session with the database
+- SessionLocal
+    - To create a session with the database for a single request
+- declartive_base
+    - To create a base class for all the models
+
