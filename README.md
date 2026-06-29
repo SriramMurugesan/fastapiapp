@@ -70,6 +70,7 @@ CREATE TABLE Students(
 - uvicorn -- server for running fastapi application --> `uvicorn app.main:app --reload`
 - psycopg2 -- postgresql driver
 - pydantic -- data validation
+- alembic -- database migration
 - typing-extensions -- type hints
 
 # Concepts:
@@ -83,4 +84,9 @@ CREATE TABLE Students(
     - To create a session with the database for a single request
 - declartive_base
     - To create a base class for all the models
+
+
+pip install alembic
+alembic init alembic
+alembic revision --autogenerate -m "initial migration"
 
