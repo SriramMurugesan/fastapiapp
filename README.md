@@ -95,5 +95,5 @@ alembic upgrade head
 
 
 
-
+npm install -g typescript
 
