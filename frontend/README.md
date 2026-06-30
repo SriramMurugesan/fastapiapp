@@ -7,5 +7,5 @@ cd talentspark/
 npm run dev
 javascript -> ES6 -> arrow functions, rest and spread, template literals, destructuring, promises, async/await
 dom-> document object manipulation
-vitual dom-> react virtual dom->copy of original dom which will update react dom and then updated dom will be updated in real dom
+Virtual dom-> react virtual dom->copy of original dom which will update react dom and then updated dom will be updated in real dom
 components-which are different sections of the web page
