@@ -9,3 +9,14 @@ javascript -> ES6 -> arrow functions, rest and spread, template literals, destru
 dom-> document object manipulation
 Virtual dom-> react virtual dom->copy of original dom which will update react dom and then updated dom will be updated in real dom
 components-which are different sections of the web page
+
+gmeetcode-https://meet.google.com/ens-mkxd-wgb
+meet code-
+
+npm install axios
+
+ui->axios->localhost:8000(api call)->fastapi(python)->db->useeffect->setstate->rerender->ui
+
+useeffect-which is used to call the api or which is used to fetch the data from the api automatically when the page is loaded
+
+useState-which is used to store the data in the component and which will update the component when the data is updated or changed
