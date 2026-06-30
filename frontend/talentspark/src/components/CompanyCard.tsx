@@ -8,14 +8,7 @@ type Props = {
 function CompanyCard({
     companies}:Props){
 
-    // const [companies, setCompanies] = useState<Company[]>([]);
-    // async function fetchCompanies() {
-    //     const companies = await getCompanies();
-    //     setCompanies(companies);
-    // }
-    // useEffect(() => {
-    //     fetchCompanies();
-    // }, []);
+
 
     return(
         <div>
