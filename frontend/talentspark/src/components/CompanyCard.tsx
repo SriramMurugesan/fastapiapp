@@ -55,7 +55,28 @@ function CompanyCard({
     const handleDelete = (id:number) => {
         ondelete(id);
     }
-    
+    const handleSave = (id:number) => {
+        onedit(editform);
+        setEditform({
+            id:0,
+            name:"",
+            email:"",
+            phone:"",
+            location:"",
+            jobs:[]
+        })
+    } 
+    const handlecancel = () => {
+        setEditCompanyId(null);
+        setEditform({
+            id:0,
+            name:"",
+            email:"",
+            phone:"",
+            location:"",
+            jobs:[]
+        })
+    } 
 
     return(
         <div>
@@ -63,11 +84,12 @@ function CompanyCard({
                 <div key={company.id}>
                     {editCompanyId === company.id ? (
                         <>
-                    <input type="text" value={company.name} onChange={(e)=>setEditform({...editform,name:e.target.value})} />
-                    <input type="text" value={company.email} onChange={(e)=>setEditform({...editform,email:e.target.value})} />
-                    <input type="text" value={company.phone} onChange={(e)=>setEditform({...editform,phone:e.target.value})} />
-                    <input type="text" value={company.location} onChange={(e)=>setEditform({...editform,location:e.target.value})} />
-                    <button onClick={() => setEditCompanyId(null)}>Save</button>
+                    <input type="text" value={editform.name} onChange={(e)=>setEditform({...editform,name:e.target.value})} />
+                    <input type="text" value={editform.email} onChange={(e)=>setEditform({...editform,email:e.target.value})} />
+                    <input type="text" value={editform.phone} onChange={(e)=>setEditform({...editform,phone:e.target.value})} />
+                    <input type="text" value={editform.location} onChange={(e)=>setEditform({...editform,location:e.target.value})} />
+                    <button onClick={() => handleSave(company.id)}>Save</button>
+                    <button onClick={handlecancel}>Cancel</button>
                     </>
                     ):
                     <>
