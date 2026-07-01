@@ -27,7 +27,11 @@ function App(){
   async function handleEdit(company:Company){
     try{
       const updatedCompany = await updateCompany(company.id,company);
-      setCompanies(companies.map((company) => company.id === updatedCompany.id ? updatedCompany : company));
+      setCompanies(prev =>
+        prev.map(company =>
+          company.id === updatedCompany.id ? updatedCompany : company
+        )
+      );
     }catch(error){
       setError(error);
     }
@@ -36,7 +40,9 @@ function App(){
   async function handleDelete(id:number){
     try{
       await deleteCompany(id);
-      setCompanies(companies.filter((company) => company.id !== id));
+      setCompanies(prev =>
+        prev.filter(company => company.id !== id)
+      );
     }catch(error){
       setError(error);
     }
@@ -45,7 +51,7 @@ function App(){
   async function handleAdd(company:Company){
     try{
       const newCompany = await createCompany(company);
-      setCompanies([...companies,newCompany]);
+      setCompanies(prev => [...prev, newCompany]);
     }catch(error){
       setError(error);
     }
@@ -71,9 +77,9 @@ function App(){
     <br />
     <CompanyCard 
     companies={companies}
-    onedit={handleEdit}
-    ondelete={handleDelete}
-    onadd={handleAdd}
+    onEdit={handleEdit}
+    onDelete={handleDelete}
+    onAdd={handleAdd}
     />
     <JobCard />
     <Footer />
