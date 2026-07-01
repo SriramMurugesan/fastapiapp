@@ -95,5 +95,7 @@ alembic upgrade head
 
 
 
-npm install -g typescript
+pip install passlib
+pip install python-jose[cryptography]
 
+alembic revision --autogenerate -m "users table added"
