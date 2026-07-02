@@ -28,3 +28,7 @@ promise - which is used to handle the asynchronous operations
 async/await - which is used to handle the asynchronous operations in a synchronous way 
 
 https://codeshare.io/5Xeggz
+
+clone the repo
+git clone repo_url
+git checkout -b "yourname"
