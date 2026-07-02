@@ -88,7 +88,7 @@ CREATE TABLE Students(
 
 pip install alembic
 alembic init alembic
-alembic-> env.py -> from imported model ->metadata data
+alembic-> env.py -> from imported model ->target_meta=Base.metadata data
 alembic.ini->sqlalchemy.url to postgresql database url ---> postgresql://user:password@host:port/database_name
 alembic revision --autogenerate -m "initial migration"
 you will have a new version update with def upgrade() in that for eg:713e98317319.py before doing upgrade check that.
