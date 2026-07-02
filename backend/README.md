@@ -91,11 +91,27 @@ alembic init alembic
 alembic-> env.py -> from imported model ->metadata data
 alembic.ini->sqlalchemy.url to postgresql database url ---> postgresql://user:password@host:port/database_name
 alembic revision --autogenerate -m "initial migration"
-alembic upgrade head   
+you will have a new version update with def upgrade() in that for eg:713e98317319.py before doing upgrade check that.
+alembic upgrade head
 
 
 
 pip install passlib
 pip install python-jose[cryptography]
 
-alembic revision --autogenerate -m "users table added"
+passlib- used to encrypt passwords
+# hashing algorithm
+argon2
+bcrypt 
+
+python-jose[cryptography]- used to create jwt tokens
+jwt tokens -> used to authenticate and authorize users
+its in format xxxx.yyyyy.zzzz basically 3 parts 
+1.header -> algo + token type:{alg:HS256,typ:JWT}
+2.payload -> data, for eg: {user_id:1,role:admin}
+3.signature -> used to verify the token:{hash(header+payload+secretkey)}
+access token -> used to access protected resources
+refresh token -> used to refresh access token
+
+
+pip install python-multipart
