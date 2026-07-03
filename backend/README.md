@@ -115,3 +115,13 @@ refresh token -> used to refresh access token
 
 
 pip install python-multipart
+
+pip install openai
+pip install python-dotenv
+pip install langchain
+pip install langchain-openai
+pip install sse-starlette
+pip install langchain-core
+pip install langchain-google-genai
+pip install langchain-groq
+pip install langchain-ollama
