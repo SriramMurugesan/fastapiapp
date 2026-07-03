@@ -1,11 +1,15 @@
-function NavBar(){
-    return(
+function NavBar() {
+    return (
         <nav>
-            <ul>
-                <li>Home</li>
-                <li>About</li>
-                <li>Contact</li>
-            </ul>
+            <button
+                onClick={() => {
+
+                    localStorage.removeItem("token");
+                    window.location.reload();
+                }}
+            >
+                Logout
+            </button>
         </nav>
     )
 }
