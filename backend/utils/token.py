@@ -17,10 +17,10 @@ def create_access_token(data:dict,expires_delta:timedelta=timedelta(hours=2)):
     to_encode.update({"exp":expire})
     encoded_jwt=jwt.encode(to_encode,key=SECRET_KEY,algorithm=ALGORITHM)
     return encoded_jwt
-def verify_access_token(token:str,db:Session=Depends(get_db)):
-    to_decode=jwt.decode(token,key=SECRET_KEY,algorithms=[ALGORITHM])
-    current_user=db.query(users).filter(users.id==to_decode["user_id"]).first()
-    if current_user is None:
+def verify_access_token(token:str):
+    try:
+        to_decode=jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+        return to_decode
+    except Exception as e:
         raise HTTPException(status_code=401,detail="Invalid credentials")
-    return current_user
     
