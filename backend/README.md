@@ -115,3 +115,21 @@ refresh token -> used to refresh access token
 
 
 pip install python-multipart
+
+
+## RBAC
+- Role Based Access Control
+-> used to give different permissions to different roles
+-> eg: admin can do anything, user can do only specific things
+use oauth2 module to implement RBAC
+-->get_current_user() - for authenticated user
+-->role_required() - for role based access control
+create_access_token() - for creating access token with (secret_key,algorithm,payload) - token created then
+verify_access_token() - for decoding access token with 
+(secret_key,algorithm,token) - token decoded then
+
+
+## flow of application
+1.login --> create access token
+2.access token --> get current user
+3.current user --> get role --> role_required --> access protected resources
