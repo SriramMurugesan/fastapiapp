@@ -1,4 +1,3 @@
-// import Welcome from "./components/Welcome";
 import NavBar from "./components/NavBar";
 import CompanyCard from "./components/CompanyCard";
 import JobCard from "./components/JobCard";
@@ -10,6 +9,7 @@ import type { Company } from "./types/company"
 import type { Job } from "./types/job"
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Chat from "./pages/Chat";
 
 
 function App() {
@@ -19,6 +19,7 @@ function App() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [page, setPage] = useState<"login" | "register">("login");
+  const [currentPage, setCurrentPage] = useState("home");
 
   const handleLogin = (newToken: string) => {
     localStorage.setItem("token", newToken);
@@ -135,23 +136,27 @@ function App() {
   }
   return (
     <>
-      <NavBar />
-      {/* <Welcome /> */}
+      <NavBar currentPage={currentPage} onNavigate={setCurrentPage} />
       <br />
-      <CompanyCard
-        companies={companies}
-        jobs={jobs}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onAdd={handleAdd}
-      />
-      <JobCard
-        jobs={jobs}
-        companies={companies}
-        onEdit={handleJobEdit}
-        onDelete={handleJobDelete}
-        onAdd={handleJobAdd}
-      />
+      {currentPage === "home" && (
+        <>
+          <CompanyCard
+            companies={companies}
+            jobs={jobs}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onAdd={handleAdd}
+          />
+          <JobCard
+            jobs={jobs}
+            companies={companies}
+            onEdit={handleJobEdit}
+            onDelete={handleJobDelete}
+            onAdd={handleJobAdd}
+          />
+        </>
+      )}
+      {currentPage === "chat" && <Chat />}
       <Footer />
     </>
   )
