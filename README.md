@@ -34,3 +34,36 @@ backend/
 register->login->create compnay->create job
 have two variants -> role1:admin
 role2:candidate-->try test all apis with both roles
+
+flow of full app
+react->login->oauthform->accesstoken->store in local->send with every request->logout
+
+react  -> axios->   fastapi_url  ->  token  ->header->  response  ->  store in local browser to remeber the login-> 
+then you can call or use the apis you want--> then for all the apis use this axios function to call the apis-> fetchcompany() use axios.get(url) ->fastapi-> postgresql_db ->return response to axios -> store in local state and show in ui
+
+LLM-Large Language Models
+Tokenization-sentence into words in list ->like this ["" "",""]
+
+Embeddings-sentence into vector numbers -> like this [1,2,3,4,5]
+
+Transformer-it do the prediction of next word on basis of previous words embeddings
+
+transformer -> self atention mechanism->it is used to give the weights to the words in the sentence
+
+
+SSE-Server sent events ->it is used to send the response from server to client in form of chunks of text so that we can show the response in form of chunks of text like chatbot ui
+
+RAG-Retrieval Augmented Generation-it is used to increase the accuracy of llm by providing relevant information to the llm
+
+context-window-it is the maximum number of words that the llm can process at a time
+
+Langchain->it's a framework to build llms ,its useful to connect llm to external sources of information->like database,files,websites
+->it is used to create complex workflows of llm->like chatbot that can answer questions about specific documents
+
+POSTGRES_URL="postgres://postgres.hpbxffhiewpvfiakaewn:yxLAul0U1Xy1p4l8@aws-1-ap-south-1.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x"
+
+POSTGRES_HOST=aws-1-ap-south-1.pooler.supabase.com
+POSTGRES_PORT=6543
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=yxLAul0U1Xy1p4l8
+POSTGRES_DB=postgres
