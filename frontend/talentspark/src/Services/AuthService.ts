@@ -1,6 +1,7 @@
 import type {LoginRequest,LoginResponse,RegisterRequest,RegisterResponse} from "../types/user";
 import axios from "axios";
-const API_URL = "http://localhost:8000/auth";
+import { API_BASE_URL } from "./api";
+const API_URL = `${API_BASE_URL}/auth`;
 
 export const login = async (credentials:LoginRequest):Promise<LoginResponse>=>{
     // Backend expects OAuth2PasswordRequestForm (form-encoded with "username" field)

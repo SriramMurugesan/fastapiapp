@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: fastapiapp-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: student_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d student_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: fastapiapp-backend
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/student_db
+      - SECRET_KEY=my_secret_key
+      - ALGORITHM=HS256
+      - OLLAMA_HOST=host.docker.internal:11434
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-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}
+      - GEMINIAPIKEY=${GEMINIAPIKEY:-AQ.Ab8RN6KWCyzjWyYsQqtKuUUksAn3amFyCPiqmvYP2hh7kRZsOQ}
+      - GROQ_API_KEY=${GROQ_API_KEY:-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}
+      - QDRANT_URL=${QDRANT_URL:-https://51d5f36f-4bf9-47df-bbc8-97f7560093a9.us-east-2-0.aws.cloud.qdrant.io}
+      - QDRANT_API_KEY=${QDRANT_API_KEY:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIiwic3ViamVjdCI6ImFwaS1rZXk6OWQ0MTVjNTAtNDRkMS00ZjFjLTg5NGYtZjBmNDljNzFmZWRlIn0.7jPAch8cNg9sXJr8NjFkP4Ecw4ZEQCkIs9M885882iI}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  frontend:
+    build:
+      context: ./frontend/talentspark
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=http://localhost:8000
+    container_name: talentspark-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
