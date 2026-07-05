@@ -10,6 +10,8 @@ import type { Job } from "./types/job"
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Chat from "./pages/Chat";
+import ResumeAnalyser from "./pages/ResumeAnalyser";
+import JobMatch from "./pages/JobMatch";
 
 
 function App() {
@@ -157,6 +159,8 @@ function App() {
         </>
       )}
       {currentPage === "chat" && <Chat />}
+      {currentPage === "resume" && <ResumeAnalyser />}
+      {currentPage === "jobmatch" && <JobMatch />}
       <Footer />
     </>
   )
