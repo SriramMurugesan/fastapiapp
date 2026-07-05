@@ -139,7 +139,6 @@ function App() {
   return (
     <>
       <NavBar currentPage={currentPage} onNavigate={setCurrentPage} />
-      <br />
       {currentPage === "home" && (
         <>
           <CompanyCard

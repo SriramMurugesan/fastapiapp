@@ -31,29 +31,42 @@ function Chat() {
     };
 
     return (
-        <div>
+        <div className="page-container" style={{ marginTop: '2rem' }}>
             <h2>Career Chat</h2>
-            <div style={{ border: "1px solid #ccc", padding: "10px", height: "400px", overflowY: "scroll" }}>
-                {messages.length === 0 && <p>Ask me anything about your career!</p>}
-                {messages.map((msg, i) => (
-                    <div key={i} style={{ marginBottom: "10px" }}>
-                        <strong>{msg.role === "user" ? "You" : "Bot"}:</strong>
-                        <p>{msg.content}</p>
-                    </div>
-                ))}
-                {loading && <p><em>Thinking...</em></p>}
+            <div className="card" style={{ display: 'flex', flexDirection: 'column', height: '60vh' }}>
+                <div style={{ flex: 1, overflowY: "auto", padding: "1rem", display: 'flex', flexDirection: 'column' }}>
+                    {messages.length === 0 && (
+                        <div style={{ margin: 'auto', color: 'var(--text)', textAlign: 'center' }}>
+                            <p style={{ fontSize: '1.2rem', marginBottom: '0.5rem' }}>Ask me anything about your career!</p>
+                            <p style={{ opacity: 0.7 }}>Powered by Llama 3.3</p>
+                        </div>
+                    )}
+                    {messages.map((msg, i) => (
+                        <div key={i} className={`chat-message ${msg.role === "user" ? "chat-user" : "chat-bot"}`}>
+                            <strong style={{ display: 'block', marginBottom: '0.25rem', opacity: 0.8, fontSize: '0.85rem' }}>
+                                {msg.role === "user" ? "You" : "Bot"}
+                            </strong>
+                            <p style={{ margin: 0 }}>{msg.content}</p>
+                        </div>
+                    ))}
+                    {loading && (
+                        <div className="chat-message chat-bot" style={{ opacity: 0.7 }}>
+                            <em>Thinking...</em>
+                        </div>
+                    )}
+                </div>
+                <form onSubmit={handleSend} style={{ margin: 0, maxWidth: '100%', padding: '1rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '1rem', boxShadow: 'none' }}>
+                    <input
+                        type="text"
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type your message..."
+                        style={{ marginBottom: 0, flex: 1 }}
+                        disabled={loading}
+                    />
+                    <button type="submit" disabled={loading || !input.trim()}>Send</button>
+                </form>
             </div>
-            <form onSubmit={handleSend} style={{ marginTop: "10px" }}>
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type your message..."
-                    style={{ width: "80%" }}
-                    disabled={loading}
-                />
-                <button type="submit" disabled={loading}>Send</button>
-            </form>
         </div>
     );
 }
