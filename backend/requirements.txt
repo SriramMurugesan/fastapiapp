@@ -13,7 +13,7 @@ alembic
 # Auth
 python-jose[cryptography]
 passlib[bcrypt]
-bcrypt
+bcrypt==4.1.3
 
 # AI / LLM
 langchain
