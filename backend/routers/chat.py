@@ -5,10 +5,10 @@ from services.langchai_service import ask_career_chatbot_response
 
 router = APIRouter(prefix="/chat",tags=["Chat"])
 
-@router.post("/ask",response_model=ChatResponse)    
-def chat_ask(request:ChatRequest):
-    ans = llm_response(request.message)
-    return ChatResponse(response=ans)
+# @router.post("/ask",response_model=ChatResponse)    
+# def chat_ask(request:ChatRequest):
+#     ans = llm_response(request.message)
+#     return ChatResponse(response=ans)
 
 
 @router.post("/ask_career",response_model=ChatResponse)
