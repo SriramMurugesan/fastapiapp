@@ -306,4 +306,62 @@ async def global_exception_handler(request: Request, exc: Exception):
         status_code=500,
         content={"detail": "An unexpected error occurred. Please try again later."}
     )
+
+---
+
+## 🔍 Section 7: TalentSpark Specific Codebase Questions
+
+### Q25. How is the database connection string dynamically parsed in our `backend/database.py` to ensure asyncpg is used?
+* **Answer**: In `backend/database.py`, the system fetches `DATABASE_URL` from the environment. Since hosting providers or local configs might supply `postgres://` or `postgresql://` (which are synchronous), the code dynamically checks and modifies the prefix:
+```python
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:password@localhost:5432/student_db")
+
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+asyncpg://", 1)
+elif DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
+```
+This guarantees that `asyncpg` is always loaded as the driver for async operations.
+
+---
+
+### Q26. Walk through the SQLAlchemy models defined in the `backend/models` folder. What are the tables and fields in TalentSpark?
+* **Answer**:
+  1. **`User` (`models/users.py`)**:
+     * Table Name: `users`
+     * Fields: `id` (int PK), `name` (str 255), `email` (str 255 unique), `hashed_password` (str 255), and `role` (str 255, default "Candidate").
+  2. **`Company` (`models/company.py`)**:
+     * Table Name: `companies`
+     * Fields: `id` (int PK), `name` (str unique search index), `email` (str unique), `phone` (str unique), `location` (str), and a relationship `jobs` pointing to the `Job` model.
+  3. **`Job` (`models/job.py`)**:
+     * Table Name: `jobs`
+     * Fields: `id` (int PK), `title` (str), `description` (str), `salary` (int), and `company_id` (int FK pointing to `companies.id`). Contains a relationship `company` back-populating `jobs`.
+
+---
+
+### Q27. How does the database startup routine work in our `backend/app/main.py`? How are tables created?
+* **Answer**: In `backend/app/main.py`, a startup event listener is registered:
+```python
+@app.on_event("startup")
+async def startup_event():
+    from database import engine
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+```
+This dynamically acquires a connection pool from our async `engine`, begins a transaction, and uses `conn.run_sync` to run the synchronous `metadata.create_all` database command, generating our users, jobs, and companies tables on startup if they don't exist.
+
+---
+
+### Q28. Walk through the `get_db` dependency in our `backend/database.py`. Why does it use `yield` instead of a return?
+* **Answer**:
+```python
+async def get_db():
+    async with SessionLocal() as db:
+        try:
+            yield db
+        finally:
+            await db.close()
+```
+* **Why `yield`**: It creates a context-managed generator. When FastAPI intercepts `Depends(get_db)`, it initiates the async session, yields `db` to the calling router function (allowing it to run database queries), and halts. Once the router handler finishes executing and returns a response, the generator resumes and enters the `finally` block, ensuring that the database session is closed and released back to the connection pool.
+
 ```

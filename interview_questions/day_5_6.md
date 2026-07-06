@@ -357,3 +357,73 @@ export const JobListPaginated = () => {
 # Secure verification explicitly defining allowed algorithms:
 payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"]) # Rejects 'none' automatically
 ```
+
+---
+
+## 🔍 Section 5: TalentSpark Specific Codebase Questions
+
+### Q15. Walk through our `backend/utils/token.py` file. How is token validation and creation configured in TalentSpark?
+* **Answer**:
+  * **Library**: The codebase uses `jose` for token actions (`from jose import jwt`).
+  * **Variables**: It loads `SECRET_KEY` and `ALGORITHM` dynamically using `dotenv` and `os.getenv()`.
+  * **Token Creation**: `create_access_token` duplicates data, adds a token expiry value (default: 2 hours), and generates a signed token:
+    ```python
+    def create_access_token(data:dict,expires_delta:timedelta=timedelta(hours=2)):
+        to_encode=data.copy()
+        expire=datetime.now()+expires_delta
+        to_encode.update({"exp":expire})
+        encoded_jwt=jwt.encode(to_encode,key=SECRET_KEY,algorithm=ALGORITHM)
+        return encoded_jwt
+    ```
+  * **Token Verification**: `verify_access_token` decodes the token. If an error is caught (e.g., token expired or manipulated), it immediately raises an HTTP 401:
+    ```python
+    def verify_access_token(token:str):
+        try:
+            to_decode=jwt.decode(token,SECRET_KEY,algorithms=[ALGORITHM])
+            return to_decode
+        except Exception as e:
+            raise HTTPException(status_code=401,detail="Invalid credentials")
+    ```
+
+---
+
+### Q16. How is user password security handled during registration and login in our backend? Which library is used?
+* **Answer**:
+  * **Library**: The codebase uses `passlib` with `bcrypt` schemes (defined in `backend/utils/security.py`):
+    ```python
+    from passlib.context import CryptContext
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    ```
+  * **Registration Flow (`routers/auth.py`)**: Before writing a new candidate or recruiter record to PostgreSQL, the plain-text password is encrypted:
+    ```python
+    db_user = User(
+        name=user.name,
+        email=user.email,
+        hashed_password=hash_password(user.password),
+        role=user.role
+    )
+    ```
+  * **Login Flow (`routers/auth.py`)**: When authenticating, the plain-text password provided is compared with the database hash:
+    ```python
+    if not verify_password(user.password, current_user.hashed_password):
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+    ```
+
+---
+
+### Q17. Walk through the `role_required` authorization decorator implemented in `backend/utils/oauth2.py`. How does it work?
+* **Answer**: In `backend/utils/oauth2.py`, we implement custom role check decorators using dynamic function nesting and dependency injection:
+```python
+def role_required(roles:list):
+    def role_decorator(current_user=Depends(get_current_user)):
+        if current_user.role not in roles:
+            raise HTTPException(status_code=403,detail="Access denied")
+        return current_user
+    return role_decorator
+```
+* **How it works**:
+  1. `role_required(["admin", "recruiter"])` is called at the router decorator level. It returns the inner function `role_decorator`.
+  2. FastAPI runs the inner function as a dependency.
+  3. `role_decorator` runs the underlying dependency `get_current_user`, which validates the user's JWT.
+  4. It inspects the `current_user.role` string. If the user's role is not in the allowed list, it stops processing and raises a `403 Forbidden` response with `detail="Access denied"`. Otherwise, it returns the validated user object.
+

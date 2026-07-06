@@ -182,3 +182,69 @@ export const StreamingChat = () => {
   2. **Model Tiering**: Route complex, reasoning-heavy tasks (like code generation) to expensive models (like GPT-4o), while routing simple classifier/routing questions to cheaper models (like GPT-4o-mini).
   3. **Context Pruning**: Implement token limits on the conversation history. Remove intermediate messages or summarize them before feeding them to the next API call to avoid input-token inflation.
   4. **Strict Token Limits**: Set `max_tokens` constraints on completions to prevent long, runaway outputs.
+
+---
+
+## 🔍 Section 5: TalentSpark Specific Codebase Questions
+
+### Q12. Walk through our `backend/services/langchai_service.py` file. What model and temperature are configured for the chatbot?
+* **Answer**: In `langchai_service.py`, we use the **ChatGroq** integration to connect with Llama models:
+```python
+llm = ChatGroq(
+    model="llama-3.3-70b-versatile",
+    api_key=os.getenv("GROQ_API_KEY"),
+    temperature=0.5,
+)
+```
+The temperature is set to `0.5`, which balances creative conversational flow with factual alignment for career guidance tasks.
+
+---
+
+### Q13. How is session-based message history implemented in `langchai_service.py`? Where are messages stored?
+* **Answer**:
+  * **Memory Storage**: Messages are stored in-memory using a dictionary called `store`:
+    ```python
+    store = {}
+    ```
+  * **History Retrieval**: The `get_history` helper checks if a session ID exists in the store. If not, it creates a new `ChatMessageHistory` instance:
+    ```python
+    def get_history(session_id: str) -> ChatMessageHistory:
+        if session_id not in store:
+            store[session_id] = ChatMessageHistory()
+        return store[session_id]
+    ```
+  * **Runnable Connection**: It wraps the chain using LangChain's `RunnableWithMessageHistory` to bind the session history retrieval to the execution execution loop:
+    ```python
+    chat_with_memory = RunnableWithMessageHistory(
+        runnable=chain_with_memory,
+        get_session_history=get_history,
+        input_messages_key="user_query",
+        history_messages_key="chat_history"
+    )
+    ```
+
+---
+
+### Q14. Explain the LCEL chain composition in our chat service.
+* **Answer**:
+  1. We define the input template using `ChatPromptTemplate.from_messages`:
+     ```python
+     prompt_with_memory = ChatPromptTemplate.from_messages([
+         ("system", "You are a helpful career guidance assistant."),
+         ("placeholder", "{chat_history}"),
+         ("human", "{user_query}")
+     ])
+     ```
+     This structure contains the system persona, standard placeholder for history injection, and the latest human query.
+  2. We build the chain by piping the prompt directly to the LLM instance:
+     ```python
+     chain_with_memory = prompt_with_memory | llm
+     ```
+  3. When `ask_career_chatbot_response(question, session_id)` is invoked, it triggers `.invoke` passing user input and config:
+     ```python
+     response = chat_with_memory.invoke(
+         {"user_query": question},
+         {"configurable": {"session_id": session_id}}
+     )
+     ```
+

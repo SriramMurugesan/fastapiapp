@@ -333,3 +333,85 @@ const handleRegisterSubmit = async () => {
       return () => controller.abort();
   }, []);
   ```
+
+---
+
+## 🔍 Section 5: TalentSpark Specific Codebase Questions
+
+### Q16. How is the base API URL configured in our `frontend/talentspark/src/Services/api.ts`? How does it support environment variables?
+* **Answer**: In `api.ts`, the base URL is configured dynamically using Vite's custom environment variable syntax:
+```typescript
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+```
+This allows the frontend build to dynamically target different backend URLs in production (e.g., live AWS Elastic Beanstalk endpoint via the `VITE_API_URL` environment variable) while defaulting to `http://localhost:8000` during local development.
+
+---
+
+### Q17. Walk through the Axios Interceptors implemented in `Services/api.ts`. What happens when a request fails with a 401 status?
+* **Answer**:
+  1. **Request Interceptor**: Automatically pulls the auth token from browser storage and attaches it to the request headers:
+     ```typescript
+     api.interceptors.request.use((config) => {
+         const token = localStorage.getItem("token");
+         if (token) {
+             config.headers.Authorization = `Bearer ${token}`;
+         }
+         return config;
+     });
+     ```
+  2. **Response Interceptor**: Monitors incoming responses. If a `401 Unauthorized` status error is returned (e.g., token expired or revoked), the interceptor automatically runs cleanup logic:
+     ```typescript
+     api.interceptors.response.use(
+         (response) => response,
+         (error) => {
+             if (error.response?.status === 401) {
+                 localStorage.removeItem("token");
+                 window.location.reload();
+             }
+             return Promise.reject(error);
+         }
+     );
+     ```
+     This triggers a page reload, immediately locking out the user and displaying the login/register screen.
+
+---
+
+### Q18. How does `App.tsx` handle authentication state routing?
+* **Answer**: In `frontend/talentspark/src/App.tsx`, state-based conditional rendering is used instead of a router package.
+  * The token state is read directly from local storage: `const [token, setToken] = useState<string | null>(localStorage.getItem("token"));`.
+  * If `token` is `null`, it renders the auth pages (`Login` or `Register` depending on `page` state):
+    ```typescript
+    if (!token) {
+      return (
+        <>
+          {page === "login" ? (
+            <Login onLogin={handleLogin} onSwitchToRegister={() => setPage("register")} />
+          ) : (
+            <Register onSwitchToLogin={() => setPage("login")} />
+          )}
+        </>
+      )
+    }
+    ```
+  * If the token exists, it renders the core layout (`NavBar`, page content, `Footer`).
+
+---
+
+### Q19. How are the initial jobs and companies loaded on startup in `App.tsx`? How is concurrency handled?
+* **Answer**: The system uses a `useEffect` hook that triggers only when the `token` changes (i.e., when a user successfully logs in):
+```typescript
+useEffect(() => {
+  if (token) {
+    fetchData();
+  }
+}, [token]);
+```
+Inside `fetchData()`, rather than awaiting the lists sequentially (which would block the UI), it executes parallel async queries using `Promise.all`:
+```typescript
+const [companiesData, jobsData] = await Promise.all([
+  getCompanies(),
+  getJobs()
+]);
+```
+This reduces page load time by executing both database queries concurrently.
+
