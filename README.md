@@ -1,3 +1,7 @@
+# 🎓 Student Documentation Guides
+* [🐳 Complete Docker & AWS Elastic Beanstalk Student Guide](file:///home/sriram/Sriram_repos/fastapiapp/DOCKER_STUDENT_GUIDE.md)
+* [📋 Docker & Docker Compose Commands Reference Sheet](file:///home/sriram/Sriram_repos/fastapiapp/DOCKER_COMMANDS.md)
+
 # Architecture
 backend/
   app/
