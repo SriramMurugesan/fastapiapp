@@ -100,3 +100,40 @@ def match_jobs_for_profile(skills: str, experience: str, top_k: int = 5) -> list
         }
         for hit in results.points
     ]
+
+
+#                  PostgreSQL
+#                       │
+#           db.query(Job).all()
+#                       │
+#                       ▼
+#      "Python Developer FastAPI SQL"
+#                       │
+#                       ▼
+#       FastEmbed (BAAI/bge-small-en-v1.5)
+#                       │
+#                       ▼
+#      [384-dimensional embedding vector]
+#                       │
+#                       ▼
+#       PointStruct(id, vector, payload)
+#                       │
+#                       ▼
+#          Qdrant Collection (job_descriptions)
+#                       │
+#         ┌─────────────┴─────────────┐
+#         │                           │
+#         ▼                           ▼
+#  search_jobs()           match_jobs_for_profile()
+#         │                           │
+#    User query                 Skills + Experience
+#         │                           │
+#         ▼                           ▼
+#  Convert to vector           Convert to vector
+#         │                           │
+#         └─────────────┬─────────────┘
+#                       ▼
+#       Cosine Similarity Search in Qdrant
+#                       │
+#                       ▼
+#         Top-k Most Relevant Jobs Returned

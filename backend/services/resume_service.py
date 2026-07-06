@@ -30,3 +30,37 @@ resume_chain = resume_prompt | llm
 def analyse_resume(resume_text: str) -> str:
     response = resume_chain.invoke({"resume_text": resume_text})
     return response.content
+
+
+    #             User
+    #               │
+    #               ▼
+    #       Upload Resume
+    #               │
+    #               ▼
+    #     Extract Resume Text
+    #               │
+    #               ▼
+    #  analyse_resume(resume_text)
+    #               │
+    #               ▼
+    #   ChatPromptTemplate
+    #   ┌────────────────────────────┐
+    #   │ System Message             │
+    #   │ Resume Text                │
+    #   └────────────────────────────┘
+    #               │
+    #               ▼
+    #     ChatGroq (Llama 3.3 70B)
+    #               │
+    #               ▼
+    #   Resume Analysis Generated
+    #               │
+    #               ▼
+    #      response.content
+    #               │
+    #               ▼
+    #      Return to FastAPI
+    #               │
+    #               ▼
+    #     Display to the User

@@ -38,3 +38,46 @@ def rag_job_search(question: str) -> str:
 
     response = rag_chain.invoke({"context": context, "question": question})
     return response.content
+
+    #             User
+    #               │
+    #               ▼
+    #  "Find Python Backend Jobs"
+    #               │
+    #               ▼
+    #      rag_job_search()
+    #               │
+    #               ▼
+    #   search_jobs(question)
+    #               │
+    #               ▼
+    #     Convert Query to Embedding
+    #               │
+    #               ▼
+    #   Qdrant Vector Search (Top 5)
+    #               │
+    #               ▼
+    #   Retrieved Job Listings
+    #               │
+    #               ▼
+    #   Build Context String
+    #               │
+    #               ▼
+    #   ChatPromptTemplate
+    #   ┌─────────────────────────────┐
+    #   │ System Message              │
+    #   │ Retrieved Jobs (context)    │
+    #   │ Human Question              │
+    #   └─────────────────────────────┘
+    #               │
+    #               ▼
+    #       ChatGroq (Llama 3.3 70B)
+    #               │
+    #               ▼
+    #   AI Generates Final Response
+    #               │
+    #               ▼
+    #      response.content
+    #               │
+    #               ▼
+    #          Return to User

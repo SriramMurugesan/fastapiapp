@@ -47,3 +47,39 @@ def job_match(request: JobMatchRequest):
     return JobMatchResponse(
         matches=[JobMatchResult(**r) for r in results]
     )
+
+
+#                     Client
+#                       │
+#           HTTP POST Request (JSON)
+#                       │
+#                       ▼
+#               FastAPI Router
+#                       │
+#       ┌───────────────┼──────────────────┐
+#       │               │                  │
+#       ▼               ▼                  ▼
+#  Resume API      Search API        RAG API
+#       │               │                  │
+#       ▼               ▼                  ▼
+#  Resume Service  Qdrant Service    RAG Service
+#       │               │                  │
+#       ▼               ▼                  ▼
+#     Groq          Vector Search     Groq + Qdrant
+#                       │
+#                       ▼
+#               Pydantic Response
+#                       │
+#                       ▼
+#                JSON Response
+#                       │
+#                       ▼
+#                    Frontend
+
+# | Endpoint                       | Purpose                                                                                                                  | Service Called             |
+# | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------ | -------------------------- |
+# | **POST `/rag/embed-jobs`**     | Reads all jobs from PostgreSQL, generates embeddings, and stores them in Qdrant.                                         | `embed_all_jobs()`         |
+# | **POST `/rag/search`**         | Performs semantic search using a natural-language query and returns the top matching jobs.                               | `search_jobs()`            |
+# | **POST `/rag/ask`**            | Executes the full RAG pipeline: retrieve relevant jobs from Qdrant and generate a natural-language answer using the LLM. | `rag_job_search()`         |
+# | **POST `/rag/analyse-resume`** | Sends resume text to the LLM and returns a structured resume analysis.                                                   | `analyse_resume()`         |
+# | **POST `/rag/job-match`**      | Matches a candidate's skills and experience against stored job embeddings and returns the best matching jobs.            | `match_jobs_for_profile()` |
