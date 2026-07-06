@@ -1,6 +1,14 @@
 # 🎓 Student Documentation Guides
 * [🐳 Complete Docker & AWS Elastic Beanstalk Student Guide](file:///home/sriram/Sriram_repos/fastapiapp/DOCKER_STUDENT_GUIDE.md)
 * [📋 Docker & Docker Compose Commands Reference Sheet](file:///home/sriram/Sriram_repos/fastapiapp/DOCKER_COMMANDS.md)
+* [🧠 Day 1–2 Interview Questions (FastAPI & PostgreSQL)](file:///home/sriram/Sriram_repos/fastapiapp/interview_questions/day_1_2.md)
+* [⚛️ Day 3–4 Interview Questions (React, TypeScript & Integration)](file:///home/sriram/Sriram_repos/fastapiapp/interview_questions/day_3_4.md)
+* [🔐 Day 5–6 Interview Questions (JWT Authentication & Full Stack)](file:///home/sriram/Sriram_repos/fastapiapp/interview_questions/day_5_6.md)
+* [🤖 Day 7–8 Interview Questions (OpenAI & LangChain Integration)](file:///home/sriram/Sriram_repos/fastapiapp/interview_questions/day_7_8.md)
+* [🔍 Day 9–10 Interview Questions (RAG, Embeddings & AI Feature Integration)](file:///home/sriram/Sriram_repos/fastapiapp/interview_questions/day_9_10.md)
+* [🐳 Day 11–12 Interview Questions (Docker & AWS Deployment)](file:///home/sriram/Sriram_repos/fastapiapp/interview_questions/day_11_12.md)
+* [🏆 Day 13–14 Interview Questions (Capstone Build & Scaling)](file:///home/sriram/Sriram_repos/fastapiapp/interview_questions/day_13_14.md)
+* [🎓 Day 15 Presentation & Program Wrap-Up Guide](file:///home/sriram/Sriram_repos/fastapiapp/interview_questions/day_15.md)
 
 # Architecture
 backend/
