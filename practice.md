@@ -799,3 +799,27 @@ docker compose logs
 
 docker system prune
 ```
+
+## laptop1
+
+# Build the image
+docker build -t <your-dockerhub-username>/myapp:latest .
+
+# Login to Docker Hub
+docker login
+
+# Push the image
+docker push <your-dockerhub-username>/myapp:latest
+
+
+## laptop2
+
+# Login (only needed if the image is private)
+docker login
+
+# Download the image
+docker pull <your-dockerhub-username>/myapp:latest
+
+# Run it
+docker run -p 8000:8000 <your-dockerhub-username>/myapp:latest
+docker run --env-file .env -p 8000:8000 <your-dockerhub-username>/myapp:latest
