@@ -71,7 +71,12 @@ function JobCard({
                                 <input type="text" value={editform.title} onChange={(e)=>setEditform({...editform,title:e.target.value})} placeholder="Title" />
                                 <input type="text" value={editform.description} onChange={(e)=>setEditform({...editform,description:e.target.value})} placeholder="Description" />
                                 <input type="text" value={editform.salary} onChange={(e)=>setEditform({...editform,salary:e.target.value})} placeholder="Salary" />
-                                <input type="number" value={editform.company_id} onChange={(e)=>setEditform({...editform,company_id:Number(e.target.value)})} placeholder="Company ID" />
+                                <select value={editform.company_id || ""} onChange={(e)=>setEditform({...editform,company_id:Number(e.target.value)})} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg)' }}>
+                                    <option value="" disabled>Select Company</option>
+                                    {companies.map((company) => (
+                                        <option key={company.id} value={company.id}>{company.name}</option>
+                                    ))}
+                                </select>
                                 <div className="action-buttons">
                                     <button onClick={handleSave}>Save</button>
                                     <button onClick={handlecancel}>Cancel</button>
@@ -110,7 +115,12 @@ function JobCard({
                         <input type="text" value={addform.title} onChange={(e)=>setAddform({...addform,title:e.target.value})} placeholder="Title" />
                         <input type="text" value={addform.description} onChange={(e)=>setAddform({...addform,description:e.target.value})} placeholder="Description" />
                         <input type="text" value={addform.salary} onChange={(e)=>setAddform({...addform,salary:e.target.value})} placeholder="Salary" />
-                        <input type="number" value={addform.company_id} onChange={(e)=>setAddform({...addform,company_id:Number(e.target.value)})} placeholder="Company ID" />
+                        <select value={addform.company_id || ""} onChange={(e)=>setAddform({...addform,company_id:Number(e.target.value)})} style={{ width: '100%', padding: '0.5rem', marginBottom: '0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border)', background: 'var(--bg)' }}>
+                            <option value="" disabled>Select Company</option>
+                            {companies.map((company) => (
+                                        <option key={company.id} value={company.id}>{company.name}</option>
+                            ))}
+                        </select>
                         <button onClick={handleAdd} style={{ width: '100%' }}>Add Job</button>
                     </div>
                 </div>

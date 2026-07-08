@@ -3,6 +3,8 @@ docker --version
 
 docker info
 
+wsl --install -d ubuntu
+
 docker pull hello-world
 
 docker images
@@ -23,7 +25,7 @@ docker rm <container_id>
 
 docker rmi <image_name>
 
-
+https://github.com/microsoft/WSL/releases/tag/2.7.10
 
 ## part 2
 
