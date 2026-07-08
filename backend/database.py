@@ -9,7 +9,13 @@ if DATABASE_URL.startswith("postgres://"):
 elif DATABASE_URL.startswith("postgresql://"):
     DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 
-engine = create_async_engine(DATABASE_URL, echo=False)
+# Supabase requires SSL but the asyncpg driver doesn't support the "?sslmode" URL text.
+# We split the URL to remove the query parameters, and pass ssl="require" instead.
+if "supabase.com" in DATABASE_URL:
+    DATABASE_URL = DATABASE_URL.split("?")[0]
+    engine = create_async_engine(DATABASE_URL, echo=False, connect_args={"ssl": "require"})
+else:
+    engine = create_async_engine(DATABASE_URL, echo=False)
 SessionLocal = async_sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=AsyncSession)
 Base = declarative_base()
 
