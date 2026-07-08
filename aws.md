@@ -139,3 +139,41 @@ Come to class with your AWS account ready.
 outfile="/mnt/data/AWS_Account_Creation_Homework.md"
 pypandoc.convert_text(content, "md", format="md", outputfile=outfile, extra_args=["--standalone"])
 print(outfile)
+
+
+
+cd ~/Downloads
+
+ls
+
+chmod 400 talentspark-key.pem
+
+ssh -i talentspark-key.pem ubuntu@PUBLIC_IP
+
+pwd
+
+sudo apt update
+
+sudo apt upgrade -y
+
+sudo apt install git -y
+
+git --version
+
+sudo apt install docker.io -y
+
+docker --version
+
+sudo systemctl start docker
+
+sudo systemctl enable docker
+
+sudo systemctl status docker
+
+sudo usermod -aG docker ubuntu
+
+exit
+
+docker ps
+
+docker run hello-world

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from routers import company,job,auth,chat,rag
+from routers import company,job,auth,chat,rag,s3_demo
 from database import Base
-from models import job as job_model,company as company_model,users as user_model
+from models import job as job_model,company as company_model,users as user_model,resume as resume_model
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -25,6 +25,7 @@ app.include_router(company.router)
 app.include_router(job.router)
 app.include_router(chat.router)
 app.include_router(rag.router)
+app.include_router(s3_demo.router)
 @app.get("/")
 def read_root():
     return {"Hello": "World"}

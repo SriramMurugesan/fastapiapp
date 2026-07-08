@@ -31,3 +31,21 @@ export async function matchJobs(skills: string, experience: string): Promise<Job
     const response = await api.post<JobMatchResponse>("/rag/job-match", { skills, experience });
     return response.data;
 }
+
+export async function uploadResumeToS3(file: File): Promise<{
+    success: boolean;
+    mode: string;
+    message: string;
+    filename: string;
+    url: string;
+    local_path?: string;
+}> {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post("/s3/upload", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data"
+        }
+    });
+    return response.data;
+}

@@ -29,3 +29,4 @@ fastembed
 # Data / Utils
 pydantic
 python-docx
+boto3
