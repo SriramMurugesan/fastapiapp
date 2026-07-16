@@ -7,8 +7,10 @@ from typing import Optional
 from database import get_db
 from utils.oauth2 import get_current_user
 from models.resume import Resume
+from utils.logging_config import get_logger
 
 router = APIRouter(prefix="/s3", tags=["S3 Storage Demo"])
+logger = get_logger("routers.s3_demo")
 
 # Path for saving files locally when S3 is in Demo/Fallback mode
 LOCAL_UPLOAD_DIR = "demo_uploads"
@@ -27,11 +29,13 @@ async def upload_file(
     """
     filename = file.filename
     content_type = file.content_type
+    logger.info(f"File upload requested by user ID: {current_user.id} | Filename: {filename} | Content-Type: {content_type}")
     
     # Read the file content
     try:
         file_bytes = await file.read()
     except Exception as e:
+        logger.error(f"Failed to read file bytes for '{filename}': {str(e)}")
         raise HTTPException(status_code=400, detail=f"Could not read uploaded file: {str(e)}")
 
     # Check if AWS credentials are set
@@ -45,16 +49,19 @@ async def upload_file(
 
     # If AWS credentials are set, try uploading to AWS S3 using boto3
     if aws_access_key and aws_secret_key:
+        logger.info(f"AWS credentials detected. Attempting to upload '{filename}' to S3 bucket '{bucket_name}'...")
         try:
             from services.s3_service import upload_file_to_s3
             s3_url = upload_file_to_s3(file_bytes, filename, content_type)
             mode = "AWS S3 Production Mode"
             message = f"Successfully uploaded '{filename}' to S3 bucket '{bucket_name}'!"
+            logger.info(f"AWS S3 Upload succeeded. URL: {s3_url}")
         except Exception as e:
-            print(f"AWS S3 Upload failed, falling back to Demo Mode: {str(e)}")
+            logger.warning(f"AWS S3 Upload failed, falling back to Local Demo Mode. Error: {str(e)}")
             
     # If S3 upload didn't run or failed, fall back to Local Demo Mode
     if not s3_url:
+        logger.info(f"Using Local Fallback Mode for file: '{filename}'")
         # Create local directory if not exists
         if not os.path.exists(LOCAL_UPLOAD_DIR):
             os.makedirs(LOCAL_UPLOAD_DIR)
@@ -66,8 +73,10 @@ async def upload_file(
         s3_url = f"https://{bucket_name}.s3.amazonaws.com/{filename}"
         mode = "Demo/Local Fallback Mode"
         message = f"Demo Mode: File saved locally to '{local_path}'. In production, this would upload to S3 bucket '{bucket_name}'."
+        logger.info(f"Local file saved at: '{local_path}'. Fallback S3 URL representation: {s3_url}")
 
     # --- SAVE TO POSTGRESQL DATABASE ---
+    logger.info(f"Saving resume record to PostgreSQL for filename: '{filename}'")
     try:
         db_resume = Resume(
             filename=filename,
@@ -78,6 +87,7 @@ async def upload_file(
         await db.commit()
         await db.refresh(db_resume)
         
+        logger.info(f"Resume database record created successfully. DB ID: {db_resume.id} for User ID: {current_user.id}")
         return {
             "success": True,
             "mode": mode,
@@ -90,7 +100,9 @@ async def upload_file(
         }
     except Exception as e:
         await db.rollback()
+        logger.error(f"Failed to write resume reference to PostgreSQL database for file '{filename}': {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=500, 
             detail=f"Uploaded successfully to storage ({mode}), but failed to save reference to PostgreSQL: {str(e)}"
         )
+
