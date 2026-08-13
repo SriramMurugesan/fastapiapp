@@ -133,3 +133,11 @@ verify_access_token() - for decoding access token with
 1.login --> create access token
 2.access token --> get current user
 3.current user --> get role --> role_required --> access protected resources
+
+# LLM
+- pip install langchain
+- pip install langchain-community
+- pip install langchain-google-genai
+- pip install python-dotenv
+- pip install langchain-ollama -if ollama using locally
+

@@ -5,8 +5,6 @@ from dotenv import load_dotenv
 import os
 from models import users
 from fastapi import Depends,HTTPException
-from sqlalchemy.orm import Session
-from database import get_db
 load_dotenv()
 SECRET_KEY=os.getenv("SECRET_KEY")
 ALGORITHM=os.getenv("ALGORITHM")

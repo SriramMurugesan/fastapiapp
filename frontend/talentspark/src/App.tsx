@@ -1,4 +1,3 @@
-// import Welcome from "./components/Welcome";
 import NavBar from "./components/NavBar";
 import CompanyCard from "./components/CompanyCard";
 import JobCard from "./components/JobCard";
@@ -10,6 +9,9 @@ import type { Company } from "./types/company"
 import type { Job } from "./types/job"
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Chat from "./pages/Chat";
+import ResumeAnalyser from "./pages/ResumeAnalyser";
+import JobMatch from "./pages/JobMatch";
 
 
 function App() {
@@ -19,6 +21,7 @@ function App() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [token, setToken] = useState<string | null>(localStorage.getItem("token"));
   const [page, setPage] = useState<"login" | "register">("login");
+  const [currentPage, setCurrentPage] = useState("home");
 
   const handleLogin = (newToken: string) => {
     localStorage.setItem("token", newToken);
@@ -35,7 +38,7 @@ function App() {
       setCompanies(companiesData);
       setJobs(jobsData);
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     } finally {
       setLoading(false);
     }
@@ -50,7 +53,7 @@ function App() {
         )
       );
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     }
   }
 
@@ -61,7 +64,7 @@ function App() {
         prev.filter(company => company.id !== id)
       );
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     }
   }
 
@@ -70,7 +73,7 @@ function App() {
       const newCompany = await createCompany(company);
       setCompanies(prev => [...prev, newCompany]);
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     }
   }
 
@@ -83,7 +86,7 @@ function App() {
         )
       );
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     }
   }
 
@@ -94,7 +97,7 @@ function App() {
         prev.filter(job => job.id !== id)
       );
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     }
   }
 
@@ -103,7 +106,7 @@ function App() {
       const newJob = await createJob(job);
       setJobs(prev => [...prev, newJob]);
     } catch (error) {
-      setError(error);
+      setError(error as Error);
     }
   }
 
@@ -135,23 +138,28 @@ function App() {
   }
   return (
     <>
-      <NavBar />
-      {/* <Welcome /> */}
-      <br />
-      <CompanyCard
-        companies={companies}
-        jobs={jobs}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onAdd={handleAdd}
-      />
-      <JobCard
-        jobs={jobs}
-        companies={companies}
-        onEdit={handleJobEdit}
-        onDelete={handleJobDelete}
-        onAdd={handleJobAdd}
-      />
+      <NavBar currentPage={currentPage} onNavigate={setCurrentPage} />
+      {currentPage === "home" && (
+        <>
+          <CompanyCard
+            companies={companies}
+            jobs={jobs}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onAdd={handleAdd}
+          />
+          <JobCard
+            jobs={jobs}
+            companies={companies}
+            onEdit={handleJobEdit}
+            onDelete={handleJobDelete}
+            onAdd={handleJobAdd}
+          />
+        </>
+      )}
+      {currentPage === "chat" && <Chat />}
+      {currentPage === "resume" && <ResumeAnalyser />}
+      {currentPage === "jobmatch" && <JobMatch />}
       <Footer />
     </>
   )
